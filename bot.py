@@ -49,7 +49,7 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def edit(self, ctx: commands.Context) -> None:
-        if self.task_list.edit_current_task_desc(ctx.author.id, ctx.message.content):
+        if self.task_list.edit_current_task_desc(ctx.author, ctx.message.content):
             print(f'{ctx.author.name}, updated your active task to "{ctx.message.content}."')
             await ctx.send(f'{ctx.author.name}, updated your active task to "{ctx.message.content}."')
         else:
@@ -59,7 +59,7 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def delete(self, ctx: commands.Context) -> None:
-        if self.task_list.delete_active_task(ctx.author.id):
+        if self.task_list.delete_active_task(ctx.author):
             print(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task <description>")
             await ctx.send(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task "
                            f"<description>")
@@ -70,11 +70,11 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def current(self, ctx: commands.Context) -> None:
-        self.task_list.get_current_task(ctx.author)
+        await ctx.send(self.task_list.get_current_task(ctx.author))
 
     @commands.command()
     async def time(self, ctx: commands.Context) -> None:
-        self.task_list.get_accumulated_time(ctx.author)
+        await ctx.send(self.task_list.get_accumulated_time(ctx.author))
 
     @commands.command()
     async def list(self, ctx: commands.Context) -> None:

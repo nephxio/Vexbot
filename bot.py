@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from typing import List
 
 load_dotenv()
-
+prefix = os.getenv("BOT_PREFIX")
 
 class Bot(commands.Bot):
 
@@ -14,7 +14,7 @@ class Bot(commands.Bot):
         self.coworking_enabled: bool = False
         self.task_list: TaskList = TaskList()
         super().__init__(token=os.getenv("TMI_TOKEN"),
-                         prefix=os.getenv("BOT_PREFIX"),
+                         prefix=prefix,
                          initial_channels=[os.getenv("CHANNEL")])
 
     async def event_ready(self):
@@ -37,7 +37,7 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def task(self, ctx: commands.Context) -> None:
-        new_task = Task(ctx.author.id, ctx.author.name, ctx.message.content)
+        new_task = Task(ctx.author.id, ctx.author.name, ctx.message.content[6:])
 
         if not self.task_list.task_exists(new_task):
             self.task_list.add_task(new_task)
@@ -53,18 +53,20 @@ class Bot(commands.Bot):
             print(f'{ctx.author.name}, updated your active task to "{ctx.message.content}."')
             await ctx.send(f'{ctx.author.name}, updated your active task to "{ctx.message.content}."')
         else:
-            print(f'{ctx.author.name}, you have no active task to update. Create one with !task <description>')
-            await ctx.send(f'{ctx.author.name}, you have no active task to update. Create one with !task <description>')
+            print(f'{ctx.author.name}, you have no active task to update. Create one with {prefix}task <description>')
+            await ctx.send(f'{ctx.author.name}, you have no active task to update. Create one '
+                           f'with {prefix}task <description>')
 
     @commands.command()
     async def delete(self, ctx: commands.Context) -> None:
         if self.task_list.delete_active_task(ctx.author.id):
-            print(f"{ctx.author.name}, deleted your active task. You may create a new one with !task <description>")
-            await ctx.send(f"{ctx.author.name}, deleted your active task. You may create a new one with !task "
+            print(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task <description>")
+            await ctx.send(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task "
                            f"<description>")
         else:
-            print(f'{ctx.author.name}, you have no active task to delete. Create one with !task <description>')
-            await ctx.send(f'{ctx.author.name}, you have no active task to delete. Create one with !task <description>')
+            print(f'{ctx.author.name}, you have no active task to delete. Create one with {prefix}task <description>')
+            await ctx.send(f'{ctx.author.name}, you have no active task to delete. Create '
+                           f'one with {prefix}task <description>')
 
     @commands.command()
     async def current(self, ctx: commands.Context) -> None:
@@ -84,7 +86,7 @@ class Bot(commands.Bot):
                 message = message + f"{task.task_desc}, "
             message = message[:-2]
         else:
-            message = f"{ctx.author.name}, you have no completed tasks. Create one with !task <description>"
+            message = f"{ctx.author.name}, you have no completed tasks. Create one with {prefix}task <description>"
 
         print({message})
         await ctx.send(message)
@@ -92,12 +94,13 @@ class Bot(commands.Bot):
     @commands.command()
     async def done(self, ctx: commands.Context) -> None:
         if self.task_list.mark_task_done(ctx.author):
-            print(f"{ctx.author.name}, marking active task as done. Create one with !task <description>")
-            await ctx.send(f"{ctx.author.name}, marking active task as done. Create one with !task <description>")
+            print(f"{ctx.author.name}, marking active task as done. Create one with {prefix}task <description>")
+            await ctx.send(f"{ctx.author.name}, marking active task as done. Create "
+                           f"one with {prefix}task <description>")
         else:
-            print(f'{ctx.author.name}, you have no active task to complete. Create one with !task <description>')
+            print(f'{ctx.author.name}, you have no active task to complete. Create one with {prefix}task <description>')
             await ctx.send(f'{ctx.author.name}, you have no active task to complete. Create one with '
-                           f'!task <description>')
+                           f'{prefix}task <description>')
 
 
 bot = Bot()

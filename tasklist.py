@@ -54,14 +54,18 @@ class TaskList:
         if self.has_active_task(user.id):
             for task in self.task_list:
                 if (task.owner_id == user.id) and task.is_current_task:
+                    print(task.get_current_task())
                     return task.get_current_task()
+        print(f"No active tasks found for {user.name}.")
         return f"No active tasks found for {user.name}."
 
     def get_accumulated_time(self, user: twitchio.Chatter) -> str:
         if self.has_active_task(user.id):
             for task in self.task_list:
                 if (task.owner_id == user.id) and task.is_current_task:
+                    print(f"{user.name}, you have been working on your current task for: {task.get_elapsed_time()}")
                     return f"{user.name}, you have been working on your current task for: {task.get_elapsed_time()}"
+        print(f"{user.name}, you have no active tasks.")
         return f"{user.name}, you have no active tasks."
 
     def list_tasks(self, user: twitchio.Chatter) -> List[Task]:

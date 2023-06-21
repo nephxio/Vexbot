@@ -18,6 +18,9 @@ class Bot(commands.Bot):
         print(f"User id is | {self.user_id}")
         print(f"Room is | {self.connected_channels}")
 
+    @commands.command()
+    async def hello(self, ctx: commands.Context):
+        await ctx.send(f"Hello {ctx.author.name}")
 
 bot = Bot()
 bot.run()

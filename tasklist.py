@@ -25,7 +25,7 @@ class TaskList:
             self.task_list.append(new_task)
 
     def edit_current_task_desc(self, user: twitchio.Chatter, new_desc: str) -> bool:
-        if self.has_active_task(user.id):
+        if self.has_active_task(user):
             for task in self.task_list:
                 if (task.owner_id == user.id) and task.is_current_task:
                     task.task_desc = new_desc
@@ -33,7 +33,7 @@ class TaskList:
         return False
 
     def delete_active_task(self, user: twitchio.Chatter) -> bool:
-        if self.has_active_task(user.id):
+        if self.has_active_task(user):
             for task in self.task_list:
                 if (task.owner_id == user.id) and task.is_current_task:
                     task.is_deleted = True
@@ -42,7 +42,7 @@ class TaskList:
         return False
 
     def mark_task_done(self, user: twitchio.Chatter) -> bool:
-        if self.has_active_task(user.id):
+        if self.has_active_task(user):
             for task in self.task_list:
                 if (task.owner_id == user.id) and task.is_current_task:
                     task.is_complete = True
@@ -51,7 +51,7 @@ class TaskList:
         return False
 
     def get_current_task(self, user: twitchio.Chatter) -> str:
-        if self.has_active_task(user.id):
+        if self.has_active_task(user):
             for task in self.task_list:
                 if (task.owner_id == user.id) and task.is_current_task:
                     print(task.get_current_task())
@@ -60,7 +60,7 @@ class TaskList:
         return f"No active tasks found for {user.name}."
 
     def get_accumulated_time(self, user: twitchio.Chatter) -> str:
-        if self.has_active_task(user.id):
+        if self.has_active_task(user):
             for task in self.task_list:
                 if (task.owner_id == user.id) and task.is_current_task:
                     print(f"{user.name}, you have been working on your current task for: {task.get_elapsed_time()}")

@@ -3,10 +3,10 @@ import datetime
 
 class Task:
 
-    def __init__(self, owner_id: int, owner_nick: str, task_desc: str,
+    def __init__(self, owner_id: str, owner_nick: str, task_desc: str,
                  is_current_task: bool = True, is_complete: bool = False, is_deleted: bool = False,
                  timestamp: datetime.datetime = datetime.datetime.now()) -> None:
-        self.owner_id: int = owner_id
+        self.owner_id: str = owner_id
         self.owner_nick: str = owner_nick
         self.task_desc: str = task_desc
         self.is_current_task: bool = is_current_task

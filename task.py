@@ -3,12 +3,11 @@ import datetime
 
 class Task:
 
-    def __init__(self, owner_id: int, owner_nick: str, task_name: str, task_desc: str = "",
+    def __init__(self, owner_id: int, owner_nick: str, task_desc: str,
                  is_current_task: bool = True, is_complete: bool = False, is_deleted: bool = False,
                  timestamp: datetime.datetime = datetime.datetime.now()) -> None:
         self.owner_id: int = owner_id
         self.owner_nick: str = owner_nick
-        self.task_name: str = task_name
         self.task_desc: str = task_desc
         self.is_current_task: bool = is_current_task
         self.is_complete: bool = is_complete
@@ -30,4 +29,4 @@ class Task:
         self.is_deleted = True
 
     def get_current_task(self) -> str:
-        return f"Current task for {self.owner_nick} : {self.task_name} - {self.task_desc}"
+        return f"Current task for {self.owner_nick}: {self.task_desc}"

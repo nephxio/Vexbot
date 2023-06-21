@@ -19,12 +19,17 @@ class Bot(commands.Bot):
         print(f"Room is | {self.connected_channels}")
 
     @commands.command()
-    async def task(self, ctx: commands.Context):
+    async def task(self, ctx: commands.Context) -> None:
         pass
 
     @commands.command()
-    async def edit(self, ctx: commands.Context):
+    async def edit(self, ctx: commands.Context) -> None:
         pass
+
+    @commands.command()
+    async def delete(self, ctx: commands.Context) -> None:
+        pass
+
 
 bot = Bot()
 bot.run()

@@ -22,6 +22,9 @@ class Bot(commands.Bot):
     async def task(self, ctx: commands.Context):
         pass
 
+    @commands.command()
+    async def edit(self, ctx: commands.Context):
+        pass
 
 bot = Bot()
 bot.run()

@@ -8,6 +8,7 @@ from typing import List
 load_dotenv()
 prefix = os.getenv("BOT_PREFIX")
 
+
 class Bot(commands.Bot):
 
     def __init__(self):
@@ -41,8 +42,8 @@ class Bot(commands.Bot):
 
         if not self.task_list.task_exists(new_task):
             self.task_list.add_task(new_task)
-            print(f"{ctx.author.name}, creating task {new_task.task_desc} for you.")
-            await ctx.send(f"{ctx.author.name}, creating task {new_task.task_desc} for you.")
+            print(f'{ctx.author.name}, creating task "{new_task.task_desc}" for you.')
+            await ctx.send(f'{ctx.author.name}, creating task "{new_task.task_desc}" for you.')
         else:
             print(f'{ctx.author.name}, the task "{new_task.task_desc}" already exists for you.')
             await ctx.send(f'{ctx.author.name}, the task "{new_task.task_desc}" already exists for you.')
@@ -50,8 +51,8 @@ class Bot(commands.Bot):
     @commands.command()
     async def edit(self, ctx: commands.Context) -> None:
         if self.task_list.edit_current_task_desc(ctx.author, ctx.message.content):
-            print(f'{ctx.author.name}, updated your active task to "{ctx.message.content}."')
-            await ctx.send(f'{ctx.author.name}, updated your active task to "{ctx.message.content}."')
+            print(f'{ctx.author.name}, updated your active task to "{ctx.message.content[5:]}."')
+            await ctx.send(f'{ctx.author.name}, updated your active task to "{ctx.message.content[5:]}."')
         else:
             print(f'{ctx.author.name}, you have no active task to update. Create one with {prefix}task <description>')
             await ctx.send(f'{ctx.author.name}, you have no active task to update. Create one '
@@ -60,7 +61,8 @@ class Bot(commands.Bot):
     @commands.command()
     async def delete(self, ctx: commands.Context) -> None:
         if self.task_list.delete_active_task(ctx.author):
-            print(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task <description>")
+            print(f"{ctx.author.name}, deleted your active task. You may create a new one "
+                  f"with {prefix}task <description>")
             await ctx.send(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task "
                            f"<description>")
         else:

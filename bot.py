@@ -58,7 +58,8 @@ class Bot(commands.Bot):
                 print(f'{ctx.author.name}, updated your active task to "{ctx.message.content[5:]}."')
                 await ctx.send(f'{ctx.author.name}, updated your active task to "{ctx.message.content[5:]}."')
             else:
-                print(f'{ctx.author.name}, you have no active task to update. Create one with {prefix}task <description>')
+                print(
+                    f'{ctx.author.name}, you have no active task to update. Create one with {prefix}task <description>')
                 await ctx.send(f'{ctx.author.name}, you have no active task to update. Create one '
                                f'with {prefix}task <description>')
         else:
@@ -70,10 +71,12 @@ class Bot(commands.Bot):
             if self.task_list.delete_active_task(ctx.author):
                 print(f"{ctx.author.name}, deleted your active task. You may create a new one "
                       f"with {prefix}task <description>")
-                await ctx.send(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task "
-                               f"<description>")
+                await ctx.send(
+                    f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task "
+                    f"<description>")
             else:
-                print(f'{ctx.author.name}, you have no active task to delete. Create one with {prefix}task <description>')
+                print(
+                    f'{ctx.author.name}, you have no active task to delete. Create one with {prefix}task <description>')
                 await ctx.send(f'{ctx.author.name}, you have no active task to delete. Create '
                                f'one with {prefix}task <description>')
         else:
@@ -119,7 +122,9 @@ class Bot(commands.Bot):
                 await ctx.send(f"{ctx.author.name}, marking active task as done. Create "
                                f"one with {prefix}task <description>")
             else:
-                print(f'{ctx.author.name}, you have no active task to complete. Create one with {prefix}task <description>')
+                print(
+                    f'{ctx.author.name}, you have no active task to complete. Create one with {prefix}task '
+                    f'<description>')
                 await ctx.send(f'{ctx.author.name}, you have no active task to complete. Create one with '
                                f'{prefix}task <description>')
         else:

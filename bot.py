@@ -38,71 +38,92 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def task(self, ctx: commands.Context) -> None:
-        new_task = Task(ctx.author.id, ctx.author.name, ctx.message.content[6:])
+        if self.coworking_enabled:
+            new_task = Task(ctx.author.id, ctx.author.name, ctx.message.content[6:])
 
-        if not self.task_list.task_exists(new_task):
-            self.task_list.add_task(new_task)
-            print(f'{ctx.author.name}, creating task "{new_task.task_desc}" for you.')
-            await ctx.send(f'{ctx.author.name}, creating task "{new_task.task_desc}" for you.')
+            if not self.task_list.task_exists(new_task):
+                self.task_list.add_task(new_task)
+                print(f'{ctx.author.name}, creating task "{new_task.task_desc}" for you.')
+                await ctx.send(f'{ctx.author.name}, creating task "{new_task.task_desc}" for you.')
+            else:
+                print(f'{ctx.author.name}, the task "{new_task.task_desc}" already exists for you.')
+                await ctx.send(f'{ctx.author.name}, the task "{new_task.task_desc}" already exists for you.')
         else:
-            print(f'{ctx.author.name}, the task "{new_task.task_desc}" already exists for you.')
-            await ctx.send(f'{ctx.author.name}, the task "{new_task.task_desc}" already exists for you.')
+            await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
 
     @commands.command()
     async def edit(self, ctx: commands.Context) -> None:
-        if self.task_list.edit_current_task_desc(ctx.author, ctx.message.content):
-            print(f'{ctx.author.name}, updated your active task to "{ctx.message.content[5:]}."')
-            await ctx.send(f'{ctx.author.name}, updated your active task to "{ctx.message.content[5:]}."')
+        if self.coworking_enabled:
+            if self.task_list.edit_current_task_desc(ctx.author, ctx.message.content):
+                print(f'{ctx.author.name}, updated your active task to "{ctx.message.content[5:]}."')
+                await ctx.send(f'{ctx.author.name}, updated your active task to "{ctx.message.content[5:]}."')
+            else:
+                print(f'{ctx.author.name}, you have no active task to update. Create one with {prefix}task <description>')
+                await ctx.send(f'{ctx.author.name}, you have no active task to update. Create one '
+                               f'with {prefix}task <description>')
         else:
-            print(f'{ctx.author.name}, you have no active task to update. Create one with {prefix}task <description>')
-            await ctx.send(f'{ctx.author.name}, you have no active task to update. Create one '
-                           f'with {prefix}task <description>')
+            await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
 
     @commands.command()
     async def delete(self, ctx: commands.Context) -> None:
-        if self.task_list.delete_active_task(ctx.author):
-            print(f"{ctx.author.name}, deleted your active task. You may create a new one "
-                  f"with {prefix}task <description>")
-            await ctx.send(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task "
-                           f"<description>")
+        if self.coworking_enabled:
+            if self.task_list.delete_active_task(ctx.author):
+                print(f"{ctx.author.name}, deleted your active task. You may create a new one "
+                      f"with {prefix}task <description>")
+                await ctx.send(f"{ctx.author.name}, deleted your active task. You may create a new one with {prefix}task "
+                               f"<description>")
+            else:
+                print(f'{ctx.author.name}, you have no active task to delete. Create one with {prefix}task <description>')
+                await ctx.send(f'{ctx.author.name}, you have no active task to delete. Create '
+                               f'one with {prefix}task <description>')
         else:
-            print(f'{ctx.author.name}, you have no active task to delete. Create one with {prefix}task <description>')
-            await ctx.send(f'{ctx.author.name}, you have no active task to delete. Create '
-                           f'one with {prefix}task <description>')
+            await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
 
     @commands.command()
     async def current(self, ctx: commands.Context) -> None:
-        await ctx.send(self.task_list.get_current_task(ctx.author))
+        if self.coworking_enabled:
+            await ctx.send(self.task_list.get_current_task(ctx.author))
+        else:
+            await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
 
     @commands.command()
     async def time(self, ctx: commands.Context) -> None:
-        await ctx.send(self.task_list.get_accumulated_time(ctx.author))
+        if self.coworking_enabled:
+            await ctx.send(self.task_list.get_accumulated_time(ctx.author))
+        else:
+            await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
 
     @commands.command()
     async def list(self, ctx: commands.Context) -> None:
-        message: str = f"{ctx.author.name}'s completed tasks: "
-        completed_tasks: List[Task] = self.task_list.list_tasks(ctx.author)
+        if self.coworking_enabled:
+            message: str = f"{ctx.author.name}'s completed tasks: "
+            completed_tasks: List[Task] = self.task_list.list_tasks(ctx.author)
 
-        if len(completed_tasks) > 0:
-            for task in completed_tasks:
-                message = message + f"{task.task_desc}, "
-            message = message[:-2]
+            if len(completed_tasks) > 0:
+                for task in completed_tasks:
+                    message = message + f"{task.task_desc}, "
+                message = message[:-2]
+            else:
+                message = f"{ctx.author.name}, you have no completed tasks. Create one with {prefix}task <description>"
+
+            print({message})
+            await ctx.send(message)
         else:
-            message = f"{ctx.author.name}, you have no completed tasks. Create one with {prefix}task <description>"
-
-        print({message})
-        await ctx.send(message)
+            await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
 
     @commands.command()
     async def done(self, ctx: commands.Context) -> None:
-        if self.task_list.mark_task_done(ctx.author):
-            print(f"{ctx.author.name}, marking active task as done. Create one with {prefix}task <description>")
-            await ctx.send(f"{ctx.author.name}, marking active task as done. Create "
-                           f"one with {prefix}task <description>")
+        if self.coworking_enabled:
+            if self.task_list.mark_task_done(ctx.author):
+                print(f"{ctx.author.name}, marking active task as done. Create one with {prefix}task <description>")
+                await ctx.send(f"{ctx.author.name}, marking active task as done. Create "
+                               f"one with {prefix}task <description>")
+            else:
+                print(f'{ctx.author.name}, you have no active task to complete. Create one with {prefix}task <description>')
+                await ctx.send(f'{ctx.author.name}, you have no active task to complete. Create one with '
+                               f'{prefix}task <description>')
         else:
-            print(f'{ctx.author.name}, you have no active task to complete. Create one with {prefix}task <description>')
-            await ctx.send(f'{ctx.author.name}, you have no active task to complete. Create one with '
-                           f'{prefix}task <description>')
+            await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
 
 
 bot = Bot()

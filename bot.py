@@ -20,6 +20,7 @@ class Bot(commands.Bot):
 
     async def event_ready(self):
         # Log to console when bot is ready
+        # Comment to test fetching
         print(f"Logged in as | {self.nick}")
         print(f"User id is | {self.user_id}")
         print(f"Room is | {self.connected_channels}")

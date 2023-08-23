@@ -23,6 +23,7 @@ class Bot(commands.Bot):
         print(f"Logged in as | {self.nick}")
         print(f"User id is | {self.user_id}")
         print(f"Room is | {self.connected_channels}")
+        await bot.connected_channels[0].send(f"Yes! Hello! I am here and ready to work, Vexcitement!")
 
     @commands.command()
     async def coworking(self, ctx: commands.Context) -> None:

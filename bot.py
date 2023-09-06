@@ -27,7 +27,7 @@ class Bot(commands.Bot):
 
     @commands.command()
     async def coworking(self, ctx: commands.Context) -> None:
-        if ctx.author.is_broadcaster or ctx.author.name == "Nephxio":
+        if ctx.author.is_broadcaster or ctx.author.is_mod:
             if not self.coworking_enabled:
                 self.coworking_enabled = True
                 print(f"Coworking enabled, {ctx.author.name}")

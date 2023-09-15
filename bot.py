@@ -53,6 +53,22 @@ class Bot(commands.Bot):
             await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
 
     @commands.command()
+    async def sidequest(self, ctx: commands.Context) -> None:
+            if self.coworking_enabled:
+                new_sidequest = Task(ctx.author.id, ctx.author.name, ctx.message.content[9:])
+
+                if not self.task_list.task_exists(new_sidequest):
+                    self.task_list.add_task(new_sidequest)
+                    print(f'{ctx.author.name}, you have completed "{new_sidequest.task_desc}" as a sidequest.')
+                    await ctx.send(f'{ctx.author.name}, you have completed "{new_sidequest.task_desc}" as a sidequest.')
+                    self.task_list.mark_task_done(ctx.author)
+                else:
+                    print(f'{ctx.author.name}, the task "{new_sidequest.task_desc}" already exists for you.')
+                    await ctx.send(f'{ctx.author.name}, the task "{new_sidequest.task_desc}" already exists for you.')
+            else:
+                await ctx.send(f'{ctx.author.name}, coworking has not been enabled for this stream.')
+
+    @commands.command()
     async def edit(self, ctx: commands.Context) -> None:
         if self.coworking_enabled:
             if self.task_list.edit_current_task_desc(ctx.author, ctx.message.content):
